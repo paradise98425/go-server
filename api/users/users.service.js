@@ -83,5 +83,17 @@ module.exports = {
           return callBack(null, results);
         }
       )
+    },
+
+    fetchLocations: (data, callBack) => {
+      pool.query(
+        `select * from locations`,
+        (error, results, fields) => {
+          if(error) {
+            callBack(error);
+          }
+          return callBack(null, results);
+        }
+      )
     }
 }

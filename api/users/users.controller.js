@@ -1,5 +1,5 @@
 
-const { create, getUserByUserEmail, saveFile, getPictureByEmail, createBadge, getBadgesByUserEmail } = require("./users.service");
+const { create, getUserByUserEmail, saveFile, getPictureByEmail, createBadge, getBadgesByUserEmail, fetchLocations } = require("./users.service");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const path = require('path');
 
@@ -125,7 +125,7 @@ module.exports = {
                 })
             }
             if(results){
-                var filename = results.badge_image.substring(results.badge_image.lastIndexOf('/')+1);
+                var filename = results.Badge_image.substring(results.Badge_image.lastIndexOf('/')+1);
                 res.sendFile(__dirname + '/uploads/' + filename);
             }
             else {
@@ -163,5 +163,31 @@ module.exports = {
             }
         });
     },
+    // Get locations
+    getLocations: (req, res) => {
+        fetchLocations(req, (err, results) => {
+            if(err) {
+                console.log(err);
+            }
+            if(!results) {
+                return res.json({
+                    success: 0,
+                    message: "record not found"
+                })
+            }
+            if(results){
+                return res.json({
+                    success: 1,
+                    locations: results
+                })
+            }
+            else {
+                return res.json({
+                    success: 0,
+                    data: "something went wrong"
+                });
+            }
+        })
+    }
 }
 

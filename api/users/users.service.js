@@ -28,7 +28,7 @@ module.exports = {
     createBadge: (email, callBack) => {
       pool.query(
         `insert into badges(badge_name, badge_type, badge_image, location_id, email) 
-          values("registration-badge","basic","api/users/uploads/basic-badge.png","1",?)`,
+          values("registration-badge","basic","basic-badge.png","1",?)`,
         [
           email
         ],
@@ -46,19 +46,6 @@ module.exports = {
     getUserByUserEmail: (email, callBack) => {
       pool.query(
         `select * from users where email = ?`,
-        [email],
-        (error, results, fields) => {
-          if(error) {
-            callBack(error);
-          }
-          return callBack(null, results[0]);
-        }
-      );
-    },
-
-    getBadgesByUserEmail: (email, callBack) => {
-      pool.query(
-        `select * from badges where email = ?`,
         [email],
         (error, results, fields) => {
           if(error) {
@@ -130,5 +117,20 @@ module.exports = {
           }
         }
       );
-    }
+    },
+
+    //getBadgesByUserEmail
+    getBadgesByUserEmail: (email, callBack) => {
+      pool.query(
+        `select * from badges where email = ?`,
+        [email],
+        (error, results, fields) => {
+          if(error) {
+            callBack(error);
+          }
+          return callBack(null, results);
+        }
+      );
+    },
+    
 }

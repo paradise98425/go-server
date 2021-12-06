@@ -1,5 +1,5 @@
 
-const { create, getUserByUserEmail, saveFile, getPictureByEmail, createBadge, getBadgesByUserEmail, fetchLocations, compareQr, getBadge } = require("./users.service");
+const { create, getUserByUserEmail, saveFile, getPictureByEmail, createBadge, getBadgesByUserEmail, fetchLocations, compareQr, getBadge, getAllBadges } = require("./users.service");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const path = require('path');
 
@@ -125,8 +125,10 @@ module.exports = {
                 })
             }
             if(results){
-                var filename = results.Badge_image.substring(results.Badge_image.lastIndexOf('/')+1);
-                res.sendFile(__dirname + '/uploads/' + filename);
+                return res.json({
+                    success: 1,
+                    data: results
+                })
             }
             else {
                 return res.json({
@@ -207,10 +209,28 @@ module.exports = {
             if(results){
                 var badgeImage;
                     if(body.qrvalue == "ZR"){
-                        badgeImage = "api/users/upload/ZR.png"
+                        badgeImage = "ZR.png"
                     }
                     else if(body.qrvalue == "ZBC"){
-                        badgeImage = "api/users/upload/ZBC/png"
+                        badgeImage = "ZBC.png"
+                    }
+                    else if(body.qrvalue == "HTX"){
+                        badgeImage = "htx_badge.png"
+                    }
+                    else if(body.qrvalue == "RH"){
+                        badgeImage = "handelsskole_badge.png"
+                    }
+                    else if(body.qrvalue == "RUNI"){
+                        badgeImage = "ruc_badge.png"
+                    }
+                    else if(body.qrvalue == "HG"){
+                        badgeImage = "himmerlev_badge.png"
+                    }
+                    else if(body.qrvalue == "CAFEK"){
+                        badgeImage = "korn_badge.png"
+                    }
+                    else if(body.qrvalue == "FCR"){
+                        badgeImage = "frellsen_badge.png"
                     }
                 var data = {
                     badge_name: "location badge",

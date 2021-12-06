@@ -2,6 +2,7 @@ const router = require("express").Router();
 const multer = require("multer");
 var fs = require('fs');
 const { createUser, login, uploadProfilePicture, sendProfilePicture, sendUserBadges, userDetails, getLocations, userScan } = require("./users.controller");
+const { getBadge } = require("./users.service");
 const upload = multer({ dest: "api/users/uploads/" });
 
 

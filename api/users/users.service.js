@@ -95,5 +95,40 @@ module.exports = {
           return callBack(null, results);
         }
       )
+    },
+
+    compareQr: (body, callBack) => {
+      pool.query(
+        `select * from locations where qrCode = ?`,
+        [body],
+        (error, results, fields) => {
+          if(error) {
+            callBack(error);
+          }
+          return callBack(null, results[0]);
+        }
+      );
+    },
+
+    getBadge: (data, callBack) => {
+      pool.query(
+        `insert into badges(badge_name, badge_type, badge_image, location_id, email) 
+          values(?,?,?,?,?)`,
+        [
+          data.badge_name,
+          data.badge_type,
+          data.badge_image,
+          data.location_id,
+          data.email
+        ],
+        (error, results2, fields) => {
+          if(error) {
+            console.log("badge insertion error", error)
+          }
+          else {
+            console.log("badge insertion success", results2);
+          }
+        }
+      );
     }
 }

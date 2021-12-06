@@ -1,5 +1,5 @@
 
-const { create, getUserByUserEmail, saveFile, getPictureByEmail, createBadge, getBadgesByUserEmail, fetchLocations } = require("./users.service");
+const { create, getUserByUserEmail, saveFile, getPictureByEmail, createBadge, getBadgesByUserEmail, fetchLocations, compareQr, getBadge } = require("./users.service");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const path = require('path');
 
@@ -188,6 +188,60 @@ module.exports = {
                 });
             }
         })
+    },
+
+    //UserScanQRCode
+    userScan: (req, res) => {
+        const body = req.body;
+        console.log(body)
+        compareQr(body.qrvalue, (err, results) => {
+            if(err) {
+                console.log(err);
+            }
+            if(!results) {
+                return res.json({
+                    success: 0,
+                    message: "Invalid QR Code"
+                })
+            }
+            if(results){
+                var badgeImage;
+                    if(body.qrvalue == "ZR"){
+                        badgeImage = "api/users/upload/ZR.png"
+                    }
+                    else if(body.qrvalue == "ZBC"){
+                        badgeImage = "api/users/upload/ZBC/png"
+                    }
+                var data = {
+                    badge_name: "location badge",
+                    badge_type: "scanner badge",
+                    badge_image: badgeImage,
+                    location_id: results.location_id,
+                    email: body.email
+                    }
+                    getBadge(data, (err, results) => {
+                    if(err) {
+                    console.log(err);
+                    }
+                    else {
+                    console.log(results);
+                    }
+                    })
+                return res.json({
+                    success: 1,
+                    message: "QR Code successfully scanned"
+                });
+            }
+            else {
+                return res.json({
+                    success: 0,
+                    data: "Invalid QR Code"
+                });
+            }
+        });
     }
+
+
+    
 }
 
